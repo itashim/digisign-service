@@ -1,0 +1,35 @@
+spring:
+  profiles: dev
+  eureka:
+    client:
+      eureka-server-port: 8761
+      registryFetchIntervalSeconds: 5
+      enabled: true
+      serviceUrl:
+        defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+    instance:
+      preferIpAddress: true
+digisign:
+  cer:
+    path:
+      root: D:\\IdeaProjects\\nbportal\\digisign-service\\src\\main\\resources\\certs\\root\\
+      nca: D:\\IdeaProjects\\nbportal\\digisign-service\\src\\main\\resources\\certs\\nca\\
+      key:
+  crl:
+    url: http://crl.pki.gov.kz/
+  oscp:
+    url: http://ocsp.pki.gov.kz
+    caCertFileName: nca_gost.crt
+  kisc:
+    oscp:
+      url: http://91.195.226.34:62255
+
+logging:
+  level:
+    ROOT: info
+
+http:
+  proxyHost: ubuntu13.bsb.nb.rk
+  proxyPort: 3128
+server:
+  port: 7777

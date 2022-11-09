@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+
+    <property name="LOG_PATH" value="/opt/micro-services/logs/"/>
+
+    <timestamp key="byDate" datePattern="dd-MM-yyyy"/>
+    <timestamp key="byMonth" datePattern="yyyy-MM"/>
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
+    <Property name="LOG_EXCEPTION_CONVERSION_WORD" value="%xwEx"/>
+    <Property name="LOG_LEVEL_PATTERN" value="%5p"/>
+    <Property name="LOG_DATEFORMAT_PATTERN" value="yyyy-MM-dd HH:mm:ss.SSS"/>
+    <Property name="LOG_CLOUD_PATTERN" value="${springAppName}, trace: %X{X-B3-TraceId:-}, %X{X-B3-SpanId:-}, %X{X-Span-Export:-}"/>
+    <Property name="MY_PATTERN" value="%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){cyan} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} [%thread] [%clr(${LOG_CLOUD_PATTERN}){red}] %clr(---){faint} %clr(%C{1.}){blue} %clr(:){faint} %msg%n%throwable"/>
+
+    <!-- Аппендеры -->
+    <!-- Консольный аппендер -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>${MY_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- Файловый аппендер -->
+    <appender name="FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${springAppName}/${byMonth}/${byDate}/${springAppName}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <Pattern>${MY_PATTERN}</Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--  rollover daily -->
+            <fileNamePattern>${LOG_PATH}/archived/${springAppName}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <root>
+        <appender-ref ref="FILE_APPENDER"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
